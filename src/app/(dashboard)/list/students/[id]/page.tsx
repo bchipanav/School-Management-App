@@ -110,7 +110,7 @@ const SingleStudentPage = () => {
 				</div>
 				{/* BOTTOM */}
 				<div className="mt-4 bg-white rounded-md p-4 h-[800px]">
-					<h1>Student's Schedule</h1>
+					<h1>Student&#39;s Schedule</h1>
 					<BigCalendar />
 				</div>
 			</div>
@@ -120,22 +120,22 @@ const SingleStudentPage = () => {
 					<h1 className="text-xl font-semibold">Shortcuts</h1>
 					<div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
 						<Link className="p-3 rounded-md bg-atioSkyLight" href="/">
-							Student's Classes
+							Student&#39;s Classes
 						</Link>
 						<Link className="p-3 rounded-md bg-atioPurpleLight" href="/">
-							Student's Teachers
+							Student&#39;s Teachers
 						</Link>
 						<Link className="p-3 rounded-md bg-atioYellowLight" href="/">
-							Student's Lessons
+							Student&#39;s Lessons
 						</Link>
 						<Link className="p-3 rounded-md bg-pink-50" href="/">
-							Student's Exams
+							Student&#39;s Exams
 						</Link>
 						<Link className="p-3 rounded-md bg-atioSkyLight" href="/">
-							Student's Assignments
+							Student&#39;s Assignments
 						</Link>
 						<Link className="p-3 rounded-md bg-atioSkyLight" href="/">
-							Student's Results
+							Student&#39;s Results
 						</Link>
 					</div>
 				</div>
