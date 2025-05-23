@@ -5,6 +5,7 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import Link from "next/link";
 import { resultsData, role } from "@/lib/data";
+import FormModal from "@/components/FormModal";
 
 type Result = {
 	id: number;
@@ -68,20 +69,8 @@ const ResultListPage = () => {
 				<div className="flex items-center gap-2">
 					{(role === "admin" || role === "teacher") && (
 						<>
-							<Link href={`/list/results/${item.id}`}>
-								<button
-									type="button"
-									className="w-7 h-7 flex items-center justify-center rounded-full bg-atioSky"
-								>
-									<Image src="/edit.png" alt="" width={16} height={16} />
-								</button>
-							</Link>
-							<button
-								type="button"
-								className="w-7 h-7 flex items-center justify-center rounded-full bg-atioPurple"
-							>
-								<Image src="/delete.png" alt="" width={16} height={16} />
-							</button>
+							<FormModal table="result" type="update" data={item} />
+							<FormModal table="result" type="delete" id={item.id} />
 						</>
 					)}
 				</div>
@@ -109,12 +98,7 @@ const ResultListPage = () => {
 							<Image src="/sort.png" alt="" width={14} height={14} />
 						</button>
 						{(role === "admin" || role === "teacher") && (
-							<button
-								type="button"
-								className="w-8 h-8 flex items-center justify-center rounded-full bg-atioYellow"
-							>
-								<Image src="/plus.png" alt="" width={14} height={14} />
-							</button>
+							<FormModal table="result" type="create" />
 						)}
 					</div>
 				</div>
