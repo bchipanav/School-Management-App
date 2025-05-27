@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import { role } from "@/lib/data";
+import { role } from "@/lib/utils";
 import FormModal from "@/components/FormModal";
 import type {
 	Class,
@@ -42,10 +42,14 @@ const columns = [
 		accessor: "date",
 		className: "hidden md:table-cell",
 	},
-	{
-		header: "Actions",
-		accessor: "action",
-	},
+	...(role === "admin" || role === "teacher"
+		? [
+				{
+					header: "Actions",
+					accessor: "action",
+				},
+			]
+		: []),
 ];
 const renderRow = (item: ExamList) => (
 	<tr

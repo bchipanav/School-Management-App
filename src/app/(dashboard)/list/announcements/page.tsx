@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import { role } from "@/lib/data";
 import FormModal from "@/components/FormModal";
 import type {
 	Announcement,
@@ -12,6 +11,7 @@ import type {
 } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
+import { currentUserId, role } from "@/lib/utils";
 
 type AnnouncementList = Announcement & { class: Class };
 
@@ -29,10 +29,14 @@ const columns = [
 		accessor: "date",
 		className: "hidden md:table-cell",
 	},
-	{
-		header: "Actions",
-		accessor: "action",
-	},
+	...(role === "admin"
+		? [
+				{
+					header: "Actions",
+					accessor: "action",
+				},
+			]
+		: []),
 ];
 
 const renderRow = (item: AnnouncementList) => (
@@ -78,6 +82,23 @@ const AnnouncementListPage = async ({
 			}
 		}
 	}
+	// ROLE CONDITIONS
+	const roleConditions = {
+		teacher: currentUserId
+			? { lessons: { some: { teacherId: currentUserId } } }
+			: {},
+		student: currentUserId ? { students: { some: { id: currentUserId } } } : {},
+		parent: currentUserId
+			? { students: { some: { parentId: currentUserId } } }
+			: {},
+	};
+
+	query.OR = [
+		{ classId: null },
+		{
+			class: roleConditions[role as keyof typeof roleConditions] || {},
+		},
+	];
 	const [data, count] = await prisma.$transaction([
 		prisma.announcement.findMany({
 			where: query,

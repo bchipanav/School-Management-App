@@ -4,7 +4,7 @@ import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import Link from "next/link";
-import { role } from "@/lib/data";
+import { role } from "@/lib/utils";
 import FormModal from "@/components/FormModal";
 import type { Prisma, Student, Class } from "@/../generated/prisma/client";
 import { prisma } from "@/lib/prisma";
