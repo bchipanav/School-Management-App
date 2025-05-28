@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import { role } from "@/lib/utils";
+import { currentUserId, role } from "@/lib/utils";
 import FormModal from "@/components/FormModal";
 import type {
 	Class,
@@ -81,21 +81,23 @@ const ExamListPage = async ({
 	const { page, ...queryParams } = searchParams;
 	const p = page ? Number.parseInt(page) : 1;
 	const query: Prisma.ExamWhereInput = {};
+	query.lesson = {};
 	// URL PARAMS CONDITIONS
 	if (queryParams) {
 		for (const [key, value] of Object.entries(queryParams)) {
 			if (value !== undefined) {
 				switch (key) {
 					case "classId":
-						query.lesson = { classId: Number.parseInt(value) };
+						query.lesson.classId = Number.parseInt(value);
+						break;
+					case "teacherId":
+						query.lesson.teacherId = value;
 						break;
 					case "search":
-						query.lesson = {
-							subject: {
-								name: {
-									contains: value,
-									mode: "insensitive",
-								},
+						query.lesson.subject = {
+							name: {
+								contains: value,
+								mode: "insensitive",
 							},
 						};
 						break;
@@ -104,6 +106,32 @@ const ExamListPage = async ({
 				}
 			}
 		}
+	}
+	// ROLE CONDITIONS
+	switch (role) {
+		case "admin":
+			break;
+		case "teacher":
+			if (currentUserId !== null) {
+				query.lesson.teacherId = currentUserId;
+			}
+			break;
+		case "student":
+			query.lesson.class = {
+				students: {
+					some: currentUserId !== null ? { id: currentUserId } : {},
+				},
+			};
+			break;
+		case "parent":
+			query.lesson.class = {
+				students: {
+					some: currentUserId !== null ? { parentId: currentUserId } : {},
+				},
+			};
+			break;
+		default:
+			break;
 	}
 	const [data, count] = await prisma.$transaction([
 		prisma.exam.findMany({

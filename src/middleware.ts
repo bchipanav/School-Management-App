@@ -11,7 +11,6 @@ export default clerkMiddleware(async (auth, req) => {
 	const { sessionClaims } = await auth();
 	const role = (sessionClaims?.metadata as { role?: string })?.role;
 
-	console.log({ sessionClaims, role });
 	for (const { matcher, allowedRoles } of matchers) {
 		if (matcher(req) && (!role || !allowedRoles.includes(role))) {
 			return NextResponse.redirect(new URL(`/${role}`, req.url));

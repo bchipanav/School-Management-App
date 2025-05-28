@@ -1,29 +1,36 @@
+import { prisma } from "@/lib/prisma";
+import { currentUserId, role } from "@/lib/utils";
 import React from "react";
 
-const announcements = [
-	{
-		id: 1,
-		title: "Number #1",
-		date: "2025-01-01",
-		description: "Lorem ipsun long story short tito llora",
-	},
-	{
-		id: 2,
-		title: "Number #2",
-		date: "2025-01-01",
-		description: "Lorem ipsun long story short tito llora",
-	},
-	{
-		id: 3,
-		title: "Number #3",
-		date: "2025-01-01",
-		description: "Lorem ipsun long story short tito llora",
-	},
-];
+const Announcements = async () => {
+	const roleConditions = {
+		teacher: currentUserId
+			? { lessons: { some: { teacherId: currentUserId } } }
+			: {},
+		student: currentUserId ? { students: { some: { id: currentUserId } } } : {},
+		parent: currentUserId ? { parents: { some: { id: currentUserId } } } : {},
+	};
+	const data = await prisma.announcement.findMany({
+		take: 3,
+		orderBy: { date: "desc" },
+		where:
+			role === "admin"
+				? {}
+				: {
+						OR: [
+							{ classId: null },
+							roleConditions[role as keyof typeof roleConditions]
+								? {
+										class: roleConditions[
+											role as keyof typeof roleConditions
+											// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+										] as any,
+									}
+								: {},
+						],
+					},
+	});
 
-const bgColors = ["#EDF9FD", "#F1F0FF", "#FEFCE8"];
-
-const Announcements = () => {
 	return (
 		<div className="bg-white p-4 rounded-md">
 			<div className="flex items-center justify-between">
@@ -31,23 +38,39 @@ const Announcements = () => {
 				<span className="text-xs text-gray-400">View All</span>
 			</div>
 			<div className="flex flex-col gap-4 mt-4">
-				{announcements.map((announcement, index) => (
-					<div
-						key={announcement.id}
-						style={{ backgroundColor: bgColors[index % bgColors.length] }}
-						className="p-4 rounded-md"
-					>
+				{data[0] && (
+					<div className="bg-atioSkyLight rounded-md p-4">
 						<div className="flex items-center justify-between">
-							<h2 className="font-medium ">{announcement.title}</h2>
-							<span className="text-gray-400 text-xs bg-white rounded-md px-1 py-1">
-								{announcement.date}
+							<h2 className="font-medium">{data[0].title}</h2>
+							<span className="text-xs text-gray-400 bg-white rounded-md px-1 py-1">
+								{new Intl.DateTimeFormat("en-GB").format(data[0].date)}
 							</span>
 						</div>
-						<p className="mt-1 text-gray-400 text-sm">
-							{announcement.description}
-						</p>
+						<p className="text-sm text-gray-400 mt-1">{data[0].description}</p>
 					</div>
-				))}
+				)}
+				{data[1] && (
+					<div className="bg-atioPurpleLight rounded-md p-4">
+						<div className="flex items-center justify-between">
+							<h2 className="font-medium">{data[1].title}</h2>
+							<span className="text-xs text-gray-400 bg-white rounded-md px-1 py-1">
+								{new Intl.DateTimeFormat("en-GB").format(data[1].date)}
+							</span>
+						</div>
+						<p className="text-sm text-gray-400 mt-1">{data[1].description}</p>
+					</div>
+				)}
+				{data[2] && (
+					<div className="bg-atioYellowLight rounded-md p-4">
+						<div className="flex items-center justify-between">
+							<h2 className="font-medium">{data[2].title}</h2>
+							<span className="text-xs text-gray-400 bg-white rounded-md px-1 py-1">
+								{new Intl.DateTimeFormat("en-GB").format(data[2].date)}
+							</span>
+						</div>
+						<p className="text-sm text-gray-400 mt-1">{data[2].description}</p>
+					</div>
+				)}
 			</div>
 		</div>
 	);

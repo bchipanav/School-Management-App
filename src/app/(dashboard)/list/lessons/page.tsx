@@ -32,10 +32,14 @@ const columns = [
 		accessor: "teacher",
 		className: "hidden md:table-cell",
 	},
-	{
-		header: "Actions",
-		accessor: "action",
-	},
+	...(role === "admin"
+		? [
+				{
+					header: "Actions",
+					accessor: "action",
+				},
+			]
+		: []),
 ];
 
 const renderRow = (item: LessonList) => (

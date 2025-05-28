@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import { role } from "@/lib/utils";
+import { currentUserId, role } from "@/lib/utils";
 import FormModal from "@/components/FormModal";
 import type { Prisma } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
@@ -69,7 +69,6 @@ const renderRow = (item: ResultList) => (
 		<td>{`${item.studentName} ${item.studentName}`}</td>
 		<td className="hidden md:table-cell">{item.score}</td>
 		<td className="hidden md:table-cell">
-			{" "}
 			{`${item.teacherName} ${item.teacherSurname}`}
 		</td>
 		<td className="hidden md:table-cell">{item.className}</td>
@@ -115,6 +114,33 @@ const ResultListPage = async ({
 			}
 		}
 	}
+
+	// ROLE CONDITIONS
+	switch (role) {
+		case "admin":
+			break;
+		case "teacher":
+			if (currentUserId) {
+				query.OR = [
+					{ exam: { lesson: { teacherId: currentUserId } } },
+					{ assignment: { lesson: { teacherId: currentUserId } } },
+				];
+			}
+			break;
+		case "student":
+			if (currentUserId) {
+				query.studentId = currentUserId;
+			}
+			break;
+		case "parent":
+			if (currentUserId) {
+				query.student = { parentId: currentUserId };
+			}
+			break;
+		default:
+			break;
+	}
+
 	const [dataRes, count] = await prisma.$transaction([
 		prisma.result.findMany({
 			where: query,
