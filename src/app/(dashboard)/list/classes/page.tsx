@@ -6,12 +6,17 @@ import Table from "@/components/Table";
 import type { Class, Prisma, Teacher } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { role } from "@/lib/utils";
 import FormContainer from "@/components/FormContainer";
+import { auth } from "@clerk/nextjs/server";
 
 type ClassList = Class & { supervisor: Teacher };
 
-const columns = [
+const ClassListPage = async ({
+	searchParams,
+}: { searchParams: { [key: string]: string | undefined } }) => {
+	const { sessionClaims } = await auth();
+const role = (sessionClaims?.metadata as { role?: string })?.role;
+	const columns = [
 	{
 		header: "Class Name",
 		accessor: "name",
@@ -64,10 +69,6 @@ const renderRow = (item: ClassList) => (
 		</td>
 	</tr>
 );
-
-const ClassListPage = async ({
-	searchParams,
-}: { searchParams: { [key: string]: string | undefined } }) => {
 	const { page, ...queryParams } = searchParams;
 	const p = page ? Number.parseInt(page) : 1;
 	const query: Prisma.ClassWhereInput = {};

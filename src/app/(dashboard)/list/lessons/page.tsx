@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import { role } from "@/lib/utils";
 import type {
 	Class,
 	Lesson,
@@ -14,11 +13,18 @@ import type {
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import FormContainer from "@/components/FormContainer";
+import { auth } from "@clerk/nextjs/server";
 
 type LessonList = Lesson & { subject: Subject } & { class: Class } & {
 	teacher: Teacher;
 };
-const columns = [
+
+const LessonListPage = async ({
+	searchParams,
+}: { searchParams: { [key: string]: string | undefined } }) => {
+		const { sessionClaims } = await auth();
+	  const role = (sessionClaims?.metadata as { role?: string })?.role;
+	const columns = [
 	{
 		header: "Subject Name",
 		accessor: "name",
@@ -65,10 +71,6 @@ const renderRow = (item: LessonList) => (
 		</td>
 	</tr>
 );
-
-const LessonListPage = async ({
-	searchParams,
-}: { searchParams: { [key: string]: string | undefined } }) => {
 	const { page, ...queryParams } = searchParams;
 	const p = page ? Number.parseInt(page) : 1;
 	const query: Prisma.LessonWhereInput = {};

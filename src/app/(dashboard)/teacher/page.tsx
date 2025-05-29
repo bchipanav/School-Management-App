@@ -22,7 +22,7 @@ const TeacherPage = async() => {
               <h1 className="text-xl font-semibold">
                 Schedule ({student.name + " " + student.surname})
               </h1>
-              <BigCalendarContainer type="classId" id={student.classId} />
+              <BigCalendarContainer type="teacherId" id={userId!} />
             </div>
           </div>
         ))}

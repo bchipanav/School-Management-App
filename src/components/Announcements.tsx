@@ -1,8 +1,12 @@
 import { prisma } from "@/lib/prisma";
-import { currentUserId, role } from "@/lib/utils";
+import { auth } from "@clerk/nextjs/server";
 import React from "react";
 
 const Announcements = async () => {
+	const { userId, sessionClaims } = await auth();
+	  const role = (sessionClaims?.metadata as { role?: string })?.role;
+	  const currentUserId = userId;
+
 	const roleConditions = {
 		teacher: currentUserId
 			? { lessons: { some: { teacherId: currentUserId } } }

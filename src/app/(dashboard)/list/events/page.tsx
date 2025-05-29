@@ -3,15 +3,21 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import { role, currentUserId } from "@/lib/utils";
 import type { Class, Event, Prisma } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import FormContainer from "@/components/FormContainer";
+import { auth } from "@clerk/nextjs/server";
 
 type EventList = Event & { class: Class };
 
-const columns = [
+const EventListPage = async ({
+	searchParams,
+}: { searchParams: { [key: string]: string | undefined } }) => {
+	const { userId, sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const currentUserId = userId;
+	const columns = [
 	{
 		header: "Title",
 		accessor: "title",
@@ -81,10 +87,6 @@ const renderRow = (item: EventList) => (
 		</td>
 	</tr>
 );
-
-const EventListPage = async ({
-	searchParams,
-}: { searchParams: { [key: string]: string | undefined } }) => {
 	const { page, ...queryParams } = searchParams;
 	const p = page ? Number.parseInt(page) : 1;
 	const query: Prisma.EventWhereInput = {};

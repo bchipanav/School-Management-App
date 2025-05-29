@@ -10,8 +10,8 @@ import { auth } from "@clerk/nextjs/server";
 import type {
 	Teacher,
 } from "@/../generated/prisma/client";
+import BigCalendarContainer from "@/components/BigCalendarContainer";
 
-// import BigCalendarContainer from "@/components/BigCalendarContainer";
 const SingleTeacherPage = async ({params: {id}}:{params: {id: string}}) => {
 
 	const { sessionClaims } = await auth();
@@ -148,7 +148,7 @@ const SingleTeacherPage = async ({params: {id}}:{params: {id: string}}) => {
 				{/* BOTTOM */}
 				<div className="mt-4 bg-white rounded-md p-4 h-[800px]">
 					<h1>Teacher&#39;s Schedule</h1>
-					{/* <BigCalendarContainer /> */}
+					    <BigCalendarContainer type="teacherId" id={teacher.id} />
 				</div>
 			</div>
 			{/* RIGHT */}

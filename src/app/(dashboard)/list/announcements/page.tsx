@@ -10,12 +10,18 @@ import type {
 } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { currentUserId, role } from "@/lib/utils";
 import FormContainer from "@/components/FormContainer";
+import { auth } from "@clerk/nextjs/server";
 
 type AnnouncementList = Announcement & { class: Class };
 
-const columns = [
+const AnnouncementListPage = async ({
+	searchParams,
+}: { searchParams: { [key: string]: string | undefined } }) => {
+	const { userId, sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const currentUserId = userId;
+	const columns = [
 	{
 		header: "Title",
 		accessor: "title",
@@ -61,10 +67,6 @@ const renderRow = (item: AnnouncementList) => (
 		</td>
 	</tr>
 );
-
-const AnnouncementListPage = async ({
-	searchParams,
-}: { searchParams: { [key: string]: string | undefined } }) => {
 	const { page, ...queryParams } = searchParams;
 	const p = page ? Number.parseInt(page) : 1;
 	const query: Prisma.AnnouncementWhereInput = {};

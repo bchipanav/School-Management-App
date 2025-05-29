@@ -3,15 +3,22 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import { role } from "@/lib/utils";
 import type { Parent, Prisma, Student } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import FormContainer from "@/components/FormContainer";
+import { auth } from "@clerk/nextjs/server";
 
 type ParentList = Parent & { students: Student[] };
 
-const columns = [
+
+
+const ParentListPage = async ({
+	searchParams,
+}: { searchParams: { [key: string]: string | undefined } }) => {
+	const { sessionClaims } = await auth();
+		  const role = (sessionClaims?.metadata as { role?: string })?.role;
+	const columns = [
 	{
 		header: "Info",
 		accessor: "info",
@@ -69,10 +76,6 @@ const renderRow = (item: ParentList) => (
 		</td>
 	</tr>
 );
-
-const ParentListPage = async ({
-	searchParams,
-}: { searchParams: { [key: string]: string | undefined } }) => {
 	const { page, ...queryParams } = searchParams;
 	const p = page ? Number.parseInt(page) : 1;
 	const query: Prisma.ParentWhereInput = {};

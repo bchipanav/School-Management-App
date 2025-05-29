@@ -3,11 +3,11 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import { currentUserId, role } from "@/lib/utils";
 import type { Prisma } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import FormContainer from "@/components/FormContainer";
+import { auth } from "@clerk/nextjs/server";
 
 type ResultList = {
 	id: number;
@@ -21,7 +21,13 @@ type ResultList = {
 	startTime: Date;
 };
 
-const columns = [
+const ResultListPage = async ({
+	searchParams,
+}: { searchParams: { [key: string]: string | undefined } }) => {
+	const { userId, sessionClaims } = await auth();
+	  const role = (sessionClaims?.metadata as { role?: string })?.role;
+	  const currentUserId = userId;
+	const columns = [
 	{
 		header: "Title",
 		accessor: "title",
@@ -87,10 +93,6 @@ const renderRow = (item: ResultList) => (
 		</td>
 	</tr>
 );
-
-const ResultListPage = async ({
-	searchParams,
-}: { searchParams: { [key: string]: string | undefined } }) => {
 	const { page, ...queryParams } = searchParams;
 	const p = page ? Number.parseInt(page) : 1;
 	const query: Prisma.ResultWhereInput = {};

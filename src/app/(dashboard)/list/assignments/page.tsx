@@ -12,8 +12,8 @@ import type {
 } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { role, currentUserId } from "@/lib/utils";
 import FormContainer from "@/components/FormContainer";
+import { auth } from "@clerk/nextjs/server";
 
 type AssignmentList = Assignment & {
 	lesson: {
@@ -23,7 +23,14 @@ type AssignmentList = Assignment & {
 	};
 };
 
-const columns = [
+
+const AssignmentListPage = async ({
+	searchParams,
+}: { searchParams: { [key: string]: string | undefined } }) => {
+	const { userId, sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const currentUserId = userId;
+	const columns = [
 	{
 		header: "Subject Name",
 		accessor: "name",
@@ -75,9 +82,6 @@ const renderRow = (item: AssignmentList) => (
 		</td>
 	</tr>
 );
-const AssignmentListPage = async ({
-	searchParams,
-}: { searchParams: { [key: string]: string | undefined } }) => {
 	const { page, ...queryParams } = searchParams;
 	const p = page ? Number.parseInt(page) : 1;
 	const query: Prisma.AssignmentWhereInput = {};

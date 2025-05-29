@@ -3,17 +3,19 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import { role } from "@/lib/utils";
 import type { Prisma, Subject, Teacher } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import FormContainer from "@/components/FormContainer";
+import { auth } from "@clerk/nextjs/server";
 
 type SubjectList = Subject & { teachers: Teacher[] };
 
 const SubjectListPage = async ({
 	searchParams,
 }: { searchParams: { [key: string]: string | undefined } }) => {
+	const { sessionClaims } = await auth();
+			  const role = (sessionClaims?.metadata as { role?: string })?.role;
 	const columns = [
 		{
 			header: "Subject Name",
