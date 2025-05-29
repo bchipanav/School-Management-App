@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import Announcements from "@/components/Announcements";
 import Performance from "@/components/Performance";
-import FormModal from "@/components/FormModal";
 import { role } from "@/lib/data";
+import FormContainer from "@/components/FormContainer";
+import BigCalendarContainer from "@/components/BigCalendarContainer";
 const SingleTeacherPage = () => {
 	return (
 		<div className="flex-1 p-4 flex flex-col gap-4 xl:flex-row">
@@ -28,7 +29,7 @@ const SingleTeacherPage = () => {
 							<div className="flex items-center gap-4">
 								<h1 className="text-xl font-semibold">Leonard Snyder</h1>
 								{role === "admin" && (
-									<FormModal
+									<FormContainer
 										table="teacher"
 										type="update"
 										data={{
@@ -134,7 +135,7 @@ const SingleTeacherPage = () => {
 				{/* BOTTOM */}
 				<div className="mt-4 bg-white rounded-md p-4 h-[800px]">
 					<h1>Teacher&#39;s Schedule</h1>
-					<BigCalendar />
+					<BigCalendarContainer />
 				</div>
 			</div>
 			{/* RIGHT */}

@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import FormModal from "@/components/FormModal";
 import type {
 	Assignment,
 	Subject,
@@ -14,6 +13,7 @@ import type {
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { role, currentUserId } from "@/lib/utils";
+import FormContainer from "@/components/FormContainer";
 
 type AssignmentList = Assignment & {
 	lesson: {
@@ -67,8 +67,8 @@ const renderRow = (item: AssignmentList) => (
 			<div className="flex items-center gap-2">
 				{(role === "admin" || role === "teacher") && (
 					<>
-						<FormModal table="assignment" type="update" data={item} />
-						<FormModal table="assignment" type="delete" id={item.id} />
+						<FormContainer table="assignment" type="update" data={item} />
+						<FormContainer table="assignment" type="delete" id={item.id} />
 					</>
 				)}
 			</div>
@@ -172,7 +172,7 @@ const AssignmentListPage = async ({
 							<Image src="/sort.png" alt="" width={14} height={14} />
 						</button>
 						{(role === "admin" || role === "teacher") && (
-							<FormModal table="assignment" type="create" />
+							<FormContainer table="assignment" type="create" />
 						)}
 					</div>
 				</div>

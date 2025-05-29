@@ -4,10 +4,10 @@ import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import { role } from "@/lib/utils";
-import FormModal from "@/components/FormModal";
 import type { Parent, Prisma, Student } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
+import FormContainer from "@/components/FormContainer";
 
 type ParentList = Parent & { students: Student[] };
 
@@ -61,8 +61,8 @@ const renderRow = (item: ParentList) => (
 			<div className="flex items-center gap-2">
 				{role === "admin" && (
 					<>
-						<FormModal table="parent" type="update" data={item} />
-						<FormModal table="parent" type="delete" id={item.id} />
+						<FormContainer table="parent" type="update" data={item} />
+						<FormContainer table="parent" type="delete" id={item.id} />
 					</>
 				)}
 			</div>
@@ -128,7 +128,7 @@ const ParentListPage = async ({
 						>
 							<Image src="/sort.png" alt="" width={14} height={14} />
 						</button>
-						{role === "admin" && <FormModal table="parent" type="create" />}
+						{role === "admin" && <FormContainer table="parent" type="create" />}
 					</div>
 				</div>
 			</div>
