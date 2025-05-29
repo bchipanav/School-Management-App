@@ -40,7 +40,8 @@ const TeacherForm = ({
 		resolver: zodResolver(teacherSchema),
 	});
 
-	 const [img, setImg] = useState<any>();
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	const [img, setImg] = useState<any>();
 	const [state, formAction] = useActionState(
 		type === "create" ? createTeacher : updateTeacher,
 		{
@@ -49,10 +50,10 @@ const TeacherForm = ({
 		},
 	);
 	const onSubmit = handleSubmit((data) => {
-  startTransition(() => {
-    formAction({ ...data, img: img?.secure_url });
-  });
-});
+		startTransition(() => {
+			formAction({ ...data, img: img?.secure_url });
+		});
+	});
 
 	const router = useRouter();
 
@@ -144,15 +145,15 @@ const TeacherForm = ({
 					type="date"
 				/>
 				{data && (
-          <InputField
-            label="Id"
-            name="id"
-            defaultValue={data?.id}
-            register={register}
-            error={errors?.id}
-            hidden
-          />
-        )}
+					<InputField
+						label="Id"
+						name="id"
+						defaultValue={data?.id}
+						register={register}
+						error={errors?.id}
+						hidden
+					/>
+				)}
 				<div className="flex flex-col gap-2 w-full md:w-1/4">
 					{/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
 					<label className="text-xs text-gray-500">Sex</label>
@@ -197,10 +198,13 @@ const TeacherForm = ({
 						</p>
 					)}
 				</div>
-				<CldUploadWidget uploadPreset="AtioSchool" onSuccess={(result, { widget }) => {
-            setImg(result.info);
-            widget.close();
-          }}>
+				<CldUploadWidget
+					uploadPreset="AtioSchool"
+					onSuccess={(result, { widget }) => {
+						setImg(result.info);
+						widget.close();
+					}}
+				>
 					{({ open }) => {
 						return (
 							// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
@@ -215,9 +219,9 @@ const TeacherForm = ({
 					}}
 				</CldUploadWidget>
 			</div>
-			 {state.error && (
-        <span className="text-red-500">Something went wrong!</span>
-      )}
+			{state.error && (
+				<span className="text-red-500">Something went wrong!</span>
+			)}
 			<button type="submit" className="bg-blue-400 text-white p-2 rounded-md">
 				{type === "create" ? "Create" : "Update"}
 			</button>

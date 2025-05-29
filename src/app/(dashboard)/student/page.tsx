@@ -6,12 +6,15 @@ import { auth } from "@clerk/nextjs/server";
 import React from "react";
 
 const StudentPage = async () => {
-  const { userId } = await auth();
-  const classItem = await prisma.class.findMany({
-    where: {
-      students: { some: { id: userId! } },
-    },
-  });
+	const { userId } = await auth();
+	if (!userId) {
+		throw new Error("User not authenticated");
+	}
+	const classItem = await prisma.class.findMany({
+		where: {
+			students: { some: { id: userId } },
+		},
+	});
 
 	return (
 		<div className="p-4 flex gap-4 flex-col xl:flex-row">

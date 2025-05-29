@@ -4,8 +4,8 @@ import React from "react";
 
 const Announcements = async () => {
 	const { userId, sessionClaims } = await auth();
-	  const role = (sessionClaims?.metadata as { role?: string })?.role;
-	  const currentUserId = userId;
+	const role = (sessionClaims?.metadata as { role?: string })?.role;
+	const currentUserId = userId;
 
 	const roleConditions = {
 		teacher: currentUserId

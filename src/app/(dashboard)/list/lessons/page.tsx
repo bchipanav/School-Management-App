@@ -22,55 +22,55 @@ type LessonList = Lesson & { subject: Subject } & { class: Class } & {
 const LessonListPage = async ({
 	searchParams,
 }: { searchParams: { [key: string]: string | undefined } }) => {
-		const { sessionClaims } = await auth();
-	  const role = (sessionClaims?.metadata as { role?: string })?.role;
+	const { sessionClaims } = await auth();
+	const role = (sessionClaims?.metadata as { role?: string })?.role;
 	const columns = [
-	{
-		header: "Subject Name",
-		accessor: "name",
-	},
-	{
-		header: "Class",
-		accessor: "class",
-	},
-	{
-		header: "Teacher",
-		accessor: "teacher",
-		className: "hidden md:table-cell",
-	},
-	...(role === "admin"
-		? [
-				{
-					header: "Actions",
-					accessor: "action",
-				},
-			]
-		: []),
-];
+		{
+			header: "Subject Name",
+			accessor: "name",
+		},
+		{
+			header: "Class",
+			accessor: "class",
+		},
+		{
+			header: "Teacher",
+			accessor: "teacher",
+			className: "hidden md:table-cell",
+		},
+		...(role === "admin"
+			? [
+					{
+						header: "Actions",
+						accessor: "action",
+					},
+				]
+			: []),
+	];
 
-const renderRow = (item: LessonList) => (
-	<tr
-		key={item.id}
-		className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-atioPurpleLight"
-	>
-		<td className="flex items-center gap-4 p-4">{item.subject.name}</td>
-		<td>{item.class.name}</td>
-		<td className="hidden md:table-cell">
-			{" "}
-			{`${item.teacher.name} ${item.teacher.surname}`}
-		</td>
-		<td>
-			<div className="flex items-center gap-2">
-				{role === "admin" && (
-					<>
-						<FormContainer table="lesson" type="update" data={item} />
-						<FormContainer table="lesson" type="delete" id={item.id} />
-					</>
-				)}
-			</div>
-		</td>
-	</tr>
-);
+	const renderRow = (item: LessonList) => (
+		<tr
+			key={item.id}
+			className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-atioPurpleLight"
+		>
+			<td className="flex items-center gap-4 p-4">{item.subject.name}</td>
+			<td>{item.class.name}</td>
+			<td className="hidden md:table-cell">
+				{" "}
+				{`${item.teacher.name} ${item.teacher.surname}`}
+			</td>
+			<td>
+				<div className="flex items-center gap-2">
+					{role === "admin" && (
+						<>
+							<FormContainer table="lesson" type="update" data={item} />
+							<FormContainer table="lesson" type="delete" id={item.id} />
+						</>
+					)}
+				</div>
+			</td>
+		</tr>
+	);
 	const { page, ...queryParams } = searchParams;
 	const p = page ? Number.parseInt(page) : 1;
 	const query: Prisma.LessonWhereInput = {};

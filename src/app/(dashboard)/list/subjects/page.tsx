@@ -15,7 +15,7 @@ const SubjectListPage = async ({
 	searchParams,
 }: { searchParams: { [key: string]: string | undefined } }) => {
 	const { sessionClaims } = await auth();
-			  const role = (sessionClaims?.metadata as { role?: string })?.role;
+	const role = (sessionClaims?.metadata as { role?: string })?.role;
 	const columns = [
 		{
 			header: "Subject Name",
