@@ -1,9 +1,9 @@
-import BigCalendar from "@/components/BigCalendar";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Announcements from "@/components/Announcements";
 import Performance from "@/components/Performance";
+// import BigCalendarContainer from "@/components/BigCalendarContainer";
 
 const SingleStudentPage = () => {
 	return (
@@ -111,7 +111,7 @@ const SingleStudentPage = () => {
 				{/* BOTTOM */}
 				<div className="mt-4 bg-white rounded-md p-4 h-[800px]">
 					<h1>Student&#39;s Schedule</h1>
-					<BigCalendar />
+					{/* <BigCalendarContainer /> */}
 				</div>
 			</div>
 			{/* RIGHT */}

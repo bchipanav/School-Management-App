@@ -2,15 +2,16 @@ import Announcements from "@/components/Announcements";
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import EventCalendar from "@/components/EventCalendar";
 import { prisma } from "@/lib/prisma";
-import { currentUserId } from "@/lib/utils";
+import { auth } from "@clerk/nextjs/server";
 import React from "react";
 
-const SudentPage = async () => {
-	const classItem = await prisma.class.findMany({
-		where: {
-			students: currentUserId ? { some: { id: currentUserId } } : {},
-		},
-	});
+const StudentPage = async () => {
+  const { userId } = await auth();
+  const classItem = await prisma.class.findMany({
+    where: {
+      students: { some: { id: userId! } },
+    },
+  });
 
 	return (
 		<div className="p-4 flex gap-4 flex-col xl:flex-row">
@@ -30,4 +31,4 @@ const SudentPage = async () => {
 	);
 };
 
-export default SudentPage;
+export default StudentPage;

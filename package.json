@@ -13,11 +13,12 @@
 	},
 	"dependencies": {
 		"@clerk/elements": "^0.23.29",
-		"@clerk/nextjs": "^6.20.0",
+		"@clerk/nextjs": "^6.20.2",
 		"@hookform/resolvers": "^5.0.1",
 		"@prisma/client": "^6.8.2",
 		"moment": "^2.30.1",
 		"next": "^15.3.2",
+		"next-cloudinary": "^6.16.0",
 		"react": "^18",
 		"react-big-calendar": "^1.18.0",
 		"react-calendar": "^5.1.0",
