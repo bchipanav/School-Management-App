@@ -12,7 +12,9 @@ const Announcements = async () => {
 			? { lessons: { some: { teacherId: currentUserId } } }
 			: {},
 		student: currentUserId ? { students: { some: { id: currentUserId } } } : {},
-		parent: currentUserId ? { parents: { some: { id: currentUserId } } } : {},
+		parent: currentUserId
+			? { students: { some: { parentId: currentUserId } } }
+			: {},
 	};
 	const data = await prisma.announcement.findMany({
 		take: 3,
